@@ -26,14 +26,15 @@ P.kin.joint_type = zeros([6 1]);
 
 % Pick a joint configuration find the associated end effector pose
 q_true = rand_angle([6 1]);
+q_true = deg2rad([-6.87,-77.52,-100.62,-91.26,91.30,-87.61]);
+
 [P.R, P.T] = fwdkin(P.kin, q_true);
+P.T
 
-
-
-[S.Q, S.is_LS] = IK.IK_3_parallel_2_intersecting(P.R, P.T, P.kin);
-S.Q
-S.is_LS
-IK_setups.IK_3_parallel_2_intersecting.error(P,S)
+% [S.Q, S.is_LS] = IK.IK_3_parallel_2_intersecting(P.R, P.T, P.kin);
+% S.Q
+% S.is_LS
+% IK_setups.IK_3_parallel_2_intersecting.error(P,S)
 
 % Remove added function locations from PATH
 rmpath('C:\Users\leogr\OneDrive\Documents\External_Academic_Adventures\RR-1\IK-Geo\ik-geo-matlab\rand_helpers');
