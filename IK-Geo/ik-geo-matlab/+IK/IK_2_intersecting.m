@@ -1,26 +1,26 @@
 function [Q, is_LS_vec] = IK_2_intersecting(R_06, p_0T, kin)
-% Axes 5 and 6 intersect
-Q = [];
-is_LS_vec = [];
-
-p_06 = p_0T - kin.P(:,1) - R_06*kin.P(:,7);
-
-[q4_vec, soln_num_vec] = search_1D( ...
-    @(q4)(alignment_err_given_q4(q4, p_06, R_06, kin)), ...
-    -pi, pi, 200, false);
-
-for i_q4 = 1:length(q4_vec)
-    [e, Q_partial] = alignment_err_given_q4(q4_vec(i_q4), p_06, R_06, kin);
-    q_partial = Q_partial(:,soln_num_vec(:,i_q4));
-
-    R_04 = rot(kin.H(:,1),q_partial(1)) * rot(kin.H(:,2),q_partial(2)) ...
-         * rot(kin.H(:,3),q_partial(3)) * rot(kin.H(:,4),q_partial(4));
-    [q5, q5_is_LS] = subproblem.sp_1(kin.H(:,6), R_04'*R_06*kin.H(:,6),  kin.H(:,5));
-    [q6, q6_is_LS] = subproblem.sp_1(kin.H(:,5), R_06'*R_04*kin.H(:,5), -kin.H(:,6));
-    q_i = [q_partial; q5; q6];
-    Q = [Q q_i];
-    is_LS_vec = [is_LS_vec [q5_is_LS; q6_is_LS; e(soln_num_vec(:,i_q4))] ];
-end
+    % Axes 5 and 6 intersect
+    Q = [];
+    is_LS_vec = [];
+    
+    p_06 = p_0T - kin.P(:,1) - R_06*kin.P(:,7);
+    
+    [q4_vec, soln_num_vec] = search_1D( ...
+        @(q4)(alignment_err_given_q4(q4, p_06, R_06, kin)), ...
+        -pi, pi, 200, false);
+    
+    for i_q4 = 1:length(q4_vec)
+        [e, Q_partial] = alignment_err_given_q4(q4_vec(i_q4), p_06, R_06, kin);
+        q_partial = Q_partial(:,soln_num_vec(:,i_q4));
+    
+        R_04 = rot(kin.H(:,1),q_partial(1)) * rot(kin.H(:,2),q_partial(2)) ...
+             * rot(kin.H(:,3),q_partial(3)) * rot(kin.H(:,4),q_partial(4));
+        [q5, q5_is_LS] = subproblem.sp_1(kin.H(:,6), R_04'*R_06*kin.H(:,6),  kin.H(:,5));
+        [q6, q6_is_LS] = subproblem.sp_1(kin.H(:,5), R_06'*R_04*kin.H(:,5), -kin.H(:,6));
+        q_i = [q_partial; q5; q6];
+        Q = [Q q_i];
+        is_LS_vec = [is_LS_vec [q5_is_LS; q6_is_LS; e(soln_num_vec(:,i_q4))] ];
+    end
 
 end
 
